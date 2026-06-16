@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+
 from catalogy.models import Category, Product
 
 
@@ -14,47 +15,40 @@ class Command(BaseCommand):
 
         # 📦 категории
         electronics = Category.objects.create(
-            name="Электроника",
-            description="Гаджеты и устройства"
+            name="Электроника", description="Гаджеты и устройства"
         )
 
-        books = Category.objects.create(
-            name="Книги",
-            description="Учебная литература"
-        )
+        books = Category.objects.create(name="Книги", description="Учебная литература")
 
-        clothes = Category.objects.create(
-            name="Одежда",
-            description="Мода и стиль"
-        )
+        clothes = Category.objects.create(name="Одежда", description="Мода и стиль")
 
         # 🛒 продукты
         Product.objects.create(
             name="iPhone 15",
             description="Смартфон Apple",
             category=electronics,
-            purchase_price=999.99
+            purchase_price=999.99,
         )
 
         Product.objects.create(
             name="MacBook Air",
             description="Ноутбук Apple",
             category=electronics,
-            purchase_price=1299.99
+            purchase_price=1299.99,
         )
 
         Product.objects.create(
             name="Django Book",
             description="Учебник по Django",
             category=books,
-            purchase_price=29.99
+            purchase_price=29.99,
         )
 
         Product.objects.create(
             name="Nike Hoodie",
             description="Толстовка",
             category=clothes,
-            purchase_price=59.99
+            purchase_price=59.99,
         )
 
         self.stdout.write(self.style.SUCCESS("Тестовые данные успешно созданы"))
