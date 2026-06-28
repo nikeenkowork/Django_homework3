@@ -1,0 +1,11 @@
+<h1>Блог</h1>
+
+<a href="{% url 'blog:create' %}">Создать запись</a>
+
+{% for blog in blogs %}
+    <h2>
+        <a href="{% url 'blog:detail' blog.pk %}">
+            {{ blog.title }}
+        </a>
+    </h2>
+{% endfor %}
