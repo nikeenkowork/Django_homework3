@@ -1,21 +1,26 @@
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.views import View
+from django.views.generic import ListView, DetailView, TemplateView
+
 from .models import Product
 
 
-def home(request):
-    return HttpResponse("Главная страница работает")
+class HomeView(View):
+    def get(self, request):
+        return HttpResponse("Главная страница работает")
 
 
-def product_list(request):
-    products = Product.objects.all()
-    return render(request, "catalogy/product_list.html", {
-        "products": products
-    })
+class ProductListView(ListView):
+    model = Product
+    template_name = "catalogy/product_list.html"
+    context_object_name = "products"
 
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, "catalogy/product_detail.html", {
-        "product": product
-    })
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "catalogy/product_detail.html"
+    context_object_name = "product"
+
+
+class ContactsView(TemplateView):
+    template_name = "catalogy/contacts.html"
