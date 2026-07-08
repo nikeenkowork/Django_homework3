@@ -8,6 +8,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
 from .models import Product
@@ -19,12 +20,14 @@ class HomeView(View):
         return HttpResponse("Главная страница работает")
 
 
+# Доступен всем
 class ProductListView(ListView):
     model = Product
     template_name = "catalogy/product_list.html"
     context_object_name = "products"
 
 
+# Доступен всем
 class ProductDetailView(DetailView):
     model = Product
     template_name = "catalogy/product_detail.html"
@@ -35,21 +38,24 @@ class ContactsView(TemplateView):
     template_name = "catalogy/contacts.html"
 
 
-class ProductCreateView(CreateView):
+# Только авторизованные пользователи
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "catalogy/product_form.html"
     success_url = reverse_lazy("product_list")
 
 
-class ProductUpdateView(UpdateView):
+# Только авторизованные пользователи
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "catalogy/product_form.html"
     success_url = reverse_lazy("product_list")
 
 
-class ProductDeleteView(DeleteView):
+# Только авторизованные пользователи
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = "catalogy/product_confirm_delete.html"
     success_url = reverse_lazy("product_list")
