@@ -8,25 +8,75 @@
 
 <h1>{{ product.name }}</h1>
 
-<p><strong>Цена:</strong> {{ product.price }} ₽</p>
+<p>
+    <strong>Цена:</strong>
+    {{ product.purchase_price }} ₽
+</p>
 
-<p><strong>Описание:</strong></p>
-<p>{{ product.description }}</p>
+<p>
+    <strong>Описание:</strong>
+</p>
+
+<p>
+    {{ product.description }}
+</p>
 
 {% if product.image %}
-    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="300">
+    <img src="{{ product.image.url }}"
+         alt="{{ product.name }}"
+         width="300">
 {% endif %}
 
 {% if product.category %}
-    <p><strong>Категория:</strong> {{ product.category.name }}</p>
-{% endif %}
-
-{% if product.stock %}
-    <p><strong>В наличии:</strong> {{ product.stock }} шт.</p>
+    <p>
+        <strong>Категория:</strong>
+        {{ product.category.name }}
+    </p>
 {% endif %}
 
 <p>
-    <a href="{% url 'product_list' %}">← Вернуться к списку товаров</a>
+    <strong>Статус:</strong>
+
+    {% if product.is_published %}
+        Опубликован
+    {% else %}
+        Скрыт
+    {% endif %}
+</p>
+
+<p>
+    <strong>Последнее изменение:</strong>
+    {{ product.updated_at|date:"d.m.Y H:i" }}
+</p>
+
+{% if perms.catalogy.can_unpublish_product and product.is_published %}
+    <p>
+        <a href="{% url 'unpublish_product' product.pk %}">
+            Снять с публикации
+        </a>
+    </p>
+{% endif %}
+
+{% if user == product.owner %}
+    <p>
+        <a href="{% url 'product_edit' product.pk %}">
+            Редактировать
+        </a>
+    </p>
+{% endif %}
+
+{% if user == product.owner or perms.catalogy.can_unpublish_product %}
+    <p>
+        <a href="{% url 'product_delete' product.pk %}">
+            Удалить
+        </a>
+    </p>
+{% endif %}
+
+<p>
+    <a href="{% url 'product_list' %}">
+        ← Вернуться к списку товаров
+    </a>
 </p>
 
 {% endblock %}

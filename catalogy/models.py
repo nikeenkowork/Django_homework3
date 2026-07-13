@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -46,6 +47,19 @@ class Product(models.Model):
         verbose_name="Дата последнего изменения",
     )
 
+    is_published = models.BooleanField(
+        default=True,
+        verbose_name="Опубликован",
+    )
+
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Владелец",
+        null=True,
+        blank=True,
+    )
+
     def __str__(self):
         """Возвращает наименование продукта."""
         return self.name
@@ -53,3 +67,10 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
+
+        permissions = [
+            (
+                "can_unpublish_product",
+                "Can unpublish product",
+            ),
+        ]
