@@ -1,4 +1,5 @@
 from django.urls import path, include
+
 from .views import (
     HomeView,
     ProductListView,
@@ -7,7 +8,9 @@ from .views import (
     ProductCreateView,
     ProductUpdateView,
     ProductDeleteView,
+    unpublish_product,
 )
+
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
@@ -20,9 +23,14 @@ urlpatterns = [
     path("products/<int:pk>/edit/", ProductUpdateView.as_view(), name="product_edit"),
     path("products/<int:pk>/delete/", ProductDeleteView.as_view(), name="product_delete"),
 
+    # Снять товар с публикации
+    path(
+        "products/<int:pk>/unpublish/",
+        unpublish_product,
+        name="unpublish_product"
+    ),
+
     path("contacts/", ContactsView.as_view(), name="contacts"),
 
     path("blog/", include("blog.urls")),
 ]
-
-
