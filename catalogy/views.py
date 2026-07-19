@@ -13,6 +13,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse, Http404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from .models import Product
 from .forms import ProductForm
@@ -31,6 +33,7 @@ class ProductListView(ListView):
 
 
 # Доступен всем
+@method_decorator(cache_page(60 * 15), name="dispatch")
 class ProductDetailView(DetailView):
     model = Product
     template_name = "catalogy/product_detail.html"
@@ -78,11 +81,8 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
         product = super().get_object(queryset)
 
-        if (
-                product.owner != self.request.user
-                and not self.request.user.has_perm(
+        if product.owner != self.request.user and not self.request.user.has_perm(
             "catalogy.can_unpublish_product"
-        )
         ):
             raise Http404
 
@@ -93,15 +93,9 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
 @permission_required("catalogy.can_unpublish_product")
 def unpublish_product(request, pk):
 
-    product = get_object_or_404(
-        Product,
-        pk=pk
-    )
+    product = get_object_or_404(Product, pk=pk)
 
     product.is_published = False
     product.save()
 
-    return redirect(
-        "product_detail",
-        pk=pk
-    )
+    return redirect("product_detail", pk=pk)
