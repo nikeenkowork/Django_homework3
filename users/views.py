@@ -16,14 +16,9 @@ def register_view(request):
 
             send_mail(
                 subject="Добро пожаловать!",
-                message=(
-                    "Спасибо за регистрацию "
-                    "на нашем сервисе!"
-                ),
+                message=("Спасибо за регистрацию " "на нашем сервисе!"),
                 from_email="admin@example.com",
-                recipient_list=[
-                    user.email
-                ],
+                recipient_list=[user.email],
             )
 
             login(request, user)
@@ -33,11 +28,7 @@ def register_view(request):
     else:
         form = RegisterForm()
 
-    return render(
-        request,
-        "users/register.html",
-        {"form": form}
-    )
+    return render(request, "users/register.html", {"form": form})
 
 
 def login_view(request):
@@ -56,11 +47,7 @@ def login_view(request):
     else:
         form = LoginForm()
 
-    return render(
-        request,
-        "users/login.html",
-        {"form": form}
-    )
+    return render(request, "users/login.html", {"form": form})
 
 
 def logout_view(request):

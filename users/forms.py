@@ -4,10 +4,7 @@ from .models import User
 
 
 class RegisterForm(forms.ModelForm):
-    password = forms.CharField(
-        widget=forms.PasswordInput,
-        label="Пароль"
-    )
+    password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
 
     class Meta:
         model = User
@@ -19,9 +16,7 @@ class RegisterForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
 
-        user.set_password(
-            self.cleaned_data["password"]
-        )
+        user.set_password(self.cleaned_data["password"])
 
         if commit:
             user.save()
@@ -30,14 +25,9 @@ class RegisterForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(
-        label="Электронная почта"
-    )
+    email = forms.EmailField(label="Электронная почта")
 
-    password = forms.CharField(
-        widget=forms.PasswordInput,
-        label="Пароль"
-    )
+    password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
 
     def clean(self):
         cleaned_data = super().clean()
@@ -45,15 +35,10 @@ class LoginForm(forms.Form):
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
 
-        user = authenticate(
-            email=email,
-            password=password
-        )
+        user = authenticate(email=email, password=password)
 
         if not user:
-            raise forms.ValidationError(
-                "Неверная почта или пароль"
-            )
+            raise forms.ValidationError("Неверная почта или пароль")
 
         cleaned_data["user"] = user
 
